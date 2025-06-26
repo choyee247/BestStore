@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Example2.Models.Product>
+
+@{
+    ViewData["Title"] = "🆕 New Arrivals";
+}
+
+<div class="container py-4">
+    <h2 class="text-primary fw-bold mb-1">🆕 New Arrivals</h2>
+    <p class="text-muted mb-4">Check out the latest products added in the last 30 days</p>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">No new products found.</div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var product in Model)
+            {
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="card border-0 shadow-sm position-relative h-100 hover-shadow">
+
+                        <!-- NEW Badge -->
+                        <span class="badge bg-danger position-absolute top-0 end-0 m-2">NEW</span>
+
+                        <!-- Product Image -->
+                        <img src="/Products/@product.ImageFileName"
+                             alt="@product.ProductName"
+                             class="card-img-top img-fluid rounded-top"
+                             onerror="this.onerror=null;this.src='/images/placeholder.png';">
+
+                        <div class="card-body d-flex flex-column">
+                            <!-- Product Name -->
+                            <h6 class="card-title text-dark fw-semibold">@product.ProductName</h6>
+
+                            <!-- Date -->
+                            <p class="text-muted small mb-1">📅 @product.CreatedAt.ToString("MMM dd, yyyy")</p>
+
+                            <!-- Price -->
+                            <p class="fw-bold text-success mb-3">@product.Price.ToString("C")</p>
+
+                            <!-- View Details Button -->
+                            <a asp-action="Details"
+                               asp-route-id="@product.ProductId"
+                               class="btn btn-outline-primary mt-auto w-100 mb-2">
+                                🔍 View Details
+                            </a>
+                            <a asp-controller="Product" asp-action="Index" class="btn btn-secondary">
+                                ⬅️ Back to Catalog
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

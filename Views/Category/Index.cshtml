@@ -1,0 +1,94 @@
+﻿@model IEnumerable<Example2.Models.Category>
+
+@{
+    ViewBag.Title = "List of Category";
+}
+
+<div class="container my-5">
+    <!-- Page Title -->
+    <h2 class="text-center mb-4 text-primary fw-bold">🏷️ List of Categories</h2>
+
+    <!-- New Category button aligned right -->
+    <div class="d-flex justify-content-end mb-3">
+        <a href="@Url.Action("Create", "Category")" class="btn btn-success shadow-sm">
+            <i class="bi bi-tags-fill me-1"></i> New Category
+        </a>
+    </div>
+
+    <!-- Responsive Centered Table -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="table-responsive shadow-sm rounded">
+                <table class="table table-bordered table-hover text-center align-middle mb-0">
+                    <thead class="table-primary">
+                        <tr>
+                            <th style ="width: 60px;">#</th>
+                            <th>Name</th>
+                            <th style="width: 170px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="2" class="text-muted py-3">No categories found.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            var count = (ViewBag.CurrentPage - 1) * 5 + 1;
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@count</td>
+                                    <td class="fw-semibold">@item.Name</td>
+                                    <td>
+                                        <a href="@Url.Action("Edit", "Category", new { id = item.Id })" class="btn btn-sm btn-outline-primary me-2">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </a>
+                                        <a href="@Url.Action("Delete", "Category", new { id = item.Id })" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                                count++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @if (ViewBag.TotalPages > 1)
+            {
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1 })"><i class="bi bi-chevron-left"></i></a>
+                        </li>
+
+                        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                            </li>
+                        }
+
+                        <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1 })"><i class="bi bi-chevron-right"></i></a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+            <!-- Go to Products button centered -->
+            <div class="text-center mt-4">
+                <a href="@Url.Action("Index", "Product")" class="btn btn-primary shadow-sm">
+                    <i class="bi bi-box-seam me-1"></i> Go to Products
+                </a>
+            </div>
+            <div class="mt-4">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-sm">
+                    ↩Back
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

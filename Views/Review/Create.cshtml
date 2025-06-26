@@ -1,0 +1,73 @@
+﻿@model Example2.Models.Review
+@{
+    ViewData["Title"] = "Leave a Review";
+}
+<h3 class="mb-4 text-primary text-center fw-bold">Leave a Review</h3>
+
+<div class="border border-secondary rounded-3 shadow-sm p-4 mx-auto" style="max-width: 800px;">
+
+    <form asp-action="Create" asp-controller="Review" method="post" novalidate class="mx-auto">
+        <input type="hidden" asp-for="@Model.ProductId" />
+
+        <div class="mb-1">
+            <label asp-for="ReviewerName" class="form-label fw-semibold">
+                <i class="bi bi-person-fill me-2"></i>Your Name
+            </label>
+            <input asp-for="ReviewerName" class="form-control form-control-lg rounded-pill shadow-sm" placeholder="Enter your name" />
+            <span asp-validation-for="ReviewerName" class="text-danger small fst-italic"></span>
+        </div>
+
+        <div class="mb-1">
+            <label asp-for="Rating" class="form-label fw-semibold d-flex align-items-center">
+                <i class="bi bi-star-fill text-warning me-2"></i>Rating (1–5)
+            </label>
+            <input asp-for="Rating" type="range" min="1" max="5" step="1" class="form-range" id="ratingRange" />
+            <div class="d-flex justify-content-between fs-sm text-muted mt-1 px-1">
+                <span>1</span>
+                <span>2</span>
+                <span>3</span>
+                <span>4</span>
+                <span>5</span>
+            </div>
+            <small class="text-muted fst-italic" id="ratingValue">Selected: 3</small>
+            <span asp-validation-for="Rating" class="text-danger small fst-italic"></span>
+        </div>
+
+        <div class="mb-1">
+            <label asp-for="Comment" class="form-label fw-semibold">
+                <i class="bi bi-chat-left-text-fill me-2"></i>Comment
+            </label>
+            <textarea asp-for="Comment" class="form-control rounded-3 shadow-sm" rows="4" placeholder="Write your feedback here..."></textarea>
+            <span asp-validation-for="Comment" class="text-danger small fst-italic"></span>
+        </div>
+        <div class="d-flex justify-content-between gap-4">
+            <button type="submit" class="btn btn-success btn-lg fw-semibold w-50">
+                ✅ Submit Review
+            </button>
+            <a asp-controller="Review" asp-action="Index" asp-route-productId="@Model.ProductId"
+               class="btn btn-outline-secondary btn-lg fw-semibold w-50">
+                 Cancel
+            </a>
+        </div>
+    </form>
+</div>
+@section Scripts {
+    <script>
+        // Update rating value display dynamically
+        const ratingRange = document.getElementById('ratingRange');
+        const ratingValue = document.getElementById('ratingValue');
+
+        function updateRatingValue() {
+            ratingValue.textContent = 'Selected: ' + ratingRange.value;
+        }
+
+        ratingRange.addEventListener('input', updateRatingValue);
+
+        // Initialize on page load
+        updateRatingValue();
+    </script>
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+
+
+

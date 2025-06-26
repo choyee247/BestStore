@@ -1,0 +1,346 @@
+﻿@* @using Example2.Models
+@model PaginatedList<Product>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success text-center">@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+<h2 class="text-center mb-4 text-primary fw-bold">🛍️ Product Catalog</h2>
+
+@using (Html.BeginForm("Index", "Product", FormMethod.Get))
+{
+    <div class="d-flex justify-content-center align-items-center mb-4">
+        @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new
+            {
+                @class = "form-control me-2",
+                placeholder = "🔍 Search products...",
+                @style = "max-width: 300px;"
+            })
+        <button type="submit" class="btn btn-primary me-2">
+            <i class="bi bi-search"></i>
+        </button>
+        <a class="btn btn-outline-secondary" asp-controller="Product" asp-action="Index" role="button">
+            <i class="bi bi-x-lg"></i>
+        </a>
+    </div>
+}
+
+<div class="row mb-4">
+    <div class="col-auto">
+        <a class="btn btn-success" asp-action="Create">
+            <i class="bi bi-plus-circle me-1"></i> New Product
+        </a>
+    </div>
+    <div class="text-end mb-3">
+        <span class="badge bg-info fs-6">
+            Total Products: <strong>@ViewBag.TotalProducts</strong>
+        </span>
+    </div>
+</div>
+
+<div class="table-responsive shadow-sm rounded border">
+    <table class="table table-hover table-bordered align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@ViewBag.NameSortParm"
+                       asp-route-searchString="@ViewBag.CurrentFilter">
+                        📦 Product Name
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@ViewBag.BrandSortParm"
+                       asp-route-searchString="@ViewBag.CurrentFilter">
+                        🏷️ Brand
+                    </a>
+                </th>
+                <th>📂 Category</th>
+                <th>💵 Price</th>
+                <th>🖼️ Image</th>
+                <th>📅 CreatedAt</th>
+                <th class="text-center">🛠️ Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var i = (Model.PageIndex - 1) * 5;
+            }
+            @foreach (var obj in Model)
+            {
+                i++;
+                <tr>
+                    <td>@i</td>
+                    <td>@obj.ProductName</td>
+                    <td>@obj.Brand.Name</td>
+                    <td>@obj.Category?.Name</td>
+                    <td>@($"{obj.Price:C}")</td>
+                    <td><img src="/Products/@obj.ImageFileName" width="80" class="img-thumbnail" /></td>
+                    <td>@ViewBag.Today</td>
+                    <td class="text-nowrap text-center">
+                        <a asp-controller="Product" asp-action="Details" asp-route-id="@obj.ProductId" class="btn btn-sm btn-outline-secondary">
+                            ✍️
+                        </a>
+                        <a class="btn btn-sm btn-outline-primary me-1" asp-controller="Product" asp-action="Edit" asp-route-id="@obj.Id">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a class="btn btn-sm btn-outline-danger" asp-controller="Product" asp-action="Delete" asp-route-id="@obj.Id" onclick="return confirm('Are you sure?')">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="d-flex justify-content-between mt-5">
+    <a class="btn btn-outline-dark" style="width: 200px;" asp-controller="Dashboard" asp-action="Index">
+        <i class="bi bi-speedometer2"></i> Dashboard
+    </a>
+    <a class="btn btn-warning" asp-action="RecycleBin">
+        <i class="bi bi-trash3"></i> Recycle Bin
+    </a>
+</div>
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex - 1)"
+                   asp-route-searchString="@ViewBag.CurrentFilter"
+                   asp-route-sortOrder="@ViewBag.CurrentSort">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+        }
+
+        <li class="page-item active">
+            <span class="page-link">@Model.PageIndex</span>
+        </li>
+
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex + 1)"
+                   asp-route-searchString="@ViewBag.CurrentFilter"
+                   asp-route-sortOrder="@ViewBag.CurrentSort">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
+<div class="mt-4">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-sm">
+        ↩Back
+    </a>
+</div>
+ *@
+ @using Example2.Models
+@model PaginatedList<Product>
+
+@{
+    ViewData["Title"] = "Product Catalog";
+    var total = ViewBag.TotalProducts ?? 0;
+    var topRated = ViewBag.TopRated as List<Product>;
+    var newArrivals = ViewBag.NewArrivals as List<Product>;
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<h2 class="text-center mb-4 text-primary fw-bold">🛍️ Product Catalog</h2>
+
+@using (Html.BeginForm("Index", "Product", FormMethod.Get))
+{
+    <div class="input-group justify-content-center mb-4">
+        @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new
+            {
+                @class = "form-control",
+                placeholder = "🔍 Search products...",
+                style = "max-width: 300px;"
+            })
+        <button type="submit" class="btn btn-outline-primary">
+            <i class="bi bi-search"></i>
+        </button>
+        <a class="btn btn-outline-secondary" asp-action="Index">
+            <i class="bi bi-x-lg"></i>
+        </a>
+    </div>
+}
+<!-- Top Rated Products Section -->
+@if (topRated != null && topRated.Any())
+{
+    <div class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="text-primary">⭐ Top Rated Products</h3>
+            <a asp-action="TopRated" class="btn btn-sm btn-outline-primary">View All</a>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var product in topRated.Take(3))
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 rounded-4">
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge bg-warning text-dark" title="Average User Rating">
+                                ⭐ @product.Rating.ToString("0.0")
+                            </span>
+                        </div>
+                        <a asp-action="Details" asp-route-id="@product.ProductId">
+                            <img src="/Products/@product.ImageFileName" class="card-img-top rounded-top mx-auto mt-3"
+                                 style="height: 160px; width: 180px; object-fit: cover;" />
+                        </a>
+
+                     <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-primary text-center text-truncate" title="@product.ProductName">
+                                @product.ProductName
+                            </h5>
+                            <p class="card-text mb-1 text-justify"><strong>Price:</strong> @($"{product.Price:C}")</p>
+                            <div class="mt-auto d-flex justify-content-center gap-2">
+                                <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@product.ProductId">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<!-- New Arrivals Section -->
+@if (newArrivals != null && newArrivals.Any())
+{
+    <div class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="text-primary">🆕 New Arrivals</h3>
+            <a asp-action="NewArrivals" class="btn btn-sm btn-outline-primary">View All</a>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var product in newArrivals.Take(3).Where(p => !p.IsCancelled))
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 rounded-4">
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge bg-danger">NEW</span>
+                        </div>
+                        <img src="/Products/@product.ImageFileName" class="card-img-top rounded-top mx-auto mt-3" style="height: 160px; width: 180px; object-fit: cover;" />
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-primary text-center">@product.ProductName</h5>
+                            <p class="card-text mb-1"><small>Added: @product.CreatedAt.ToString("MMM dd, yyyy")</small></p>
+                            <p class="card-text mb-1 text-justify"><strong>Price:</strong> @($"{product.Price:C}")</p>
+                            <div class="mt-auto d-flex justify-content-center gap-2">
+                                <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@product.ProductId">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+    <a class="btn btn-success mb-2" asp-action="Create">
+        <i class="bi bi-plus-circle me-1"></i> Add New Product
+    </a>
+@*     <a class="btn btn-warning" asp-action="TopRated">
+        <i class="bi bi-star-fill"></i> Top Rated
+    </a>
+    <a class="btn btn-info" asp-action="NewArrivals">
+        <i class="bi bi-alarm"></i> New Arrivals
+    </a> *@
+    <span class="badge bg-info fs-6">
+        Total Products: <strong>@total</strong>
+    </span>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @{
+        var index = (Model.PageIndex - 1) * 6;
+    }
+    @foreach (var product in Model)
+    {
+        index++;
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0 rounded-4">
+                <img src="/Products/@product.ImageFileName" class="card-img-top rounded-top mx-auto mt-3" style="height: 160px; width: 180px; object-fit: cover;" />
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title text-primary text-center">@product.ProductName</h5>
+
+                    <p class="card-text mb-1 text-justify"><strong>Brand:</strong> @product.Brand?.Name</p>
+                    <p class="card-text mb-1 text-justify"><strong>Category:</strong> @product.Category?.Name</p>
+                    <p class="card-text mb-1 text-justify"><strong>Price:</strong> @($"{product.Price:C}")</p>
+                    <p class="card-text text-muted text-justify"><small>Created: @ViewBag.Today</small></p>
+
+                    <div class="mt-auto d-flex justify-content-between gap-2">
+                        <a class="btn btn-sm btn-outline-secondary" asp-action="Details" asp-route-id="@product.ProductId">✍️ View</a>
+                        <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@product.Id">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@product.Id" onclick="return confirm('Are you sure?')">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+</div>
+
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex - 1)"
+                   asp-route-searchString="@ViewBag.CurrentFilter"
+                   asp-route-sortOrder="@ViewBag.CurrentSort">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+        }
+
+        <li class="page-item active">
+            <span class="page-link">@Model.PageIndex</span>
+        </li>
+
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex + 1)"
+                   asp-route-searchString="@ViewBag.CurrentFilter"
+                   asp-route-sortOrder="@ViewBag.CurrentSort">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
+
+<div class="d-flex justify-content-between mt-5">
+    <a class="btn btn-outline-dark" asp-controller="Dashboard" asp-action="Index" style="width: 200px;">
+        <i class="bi bi-speedometer2"></i> Dashboard
+    </a>
+    <a class="btn btn-warning" asp-action="RecycleBin">
+        <i class="bi bi-trash3"></i> Recycle Bin
+    </a>
+</div>
+
+<div class="mt-4 text-center">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-sm btn-primary">
+        ↩ Back to Home
+    </a>
+</div>

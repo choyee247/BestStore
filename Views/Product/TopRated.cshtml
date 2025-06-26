@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Example2.Models.Product>
+
+@{
+    ViewData["Title"] = "Top Rated Products";
+}
+
+<div class="container">
+    <h1 class="my-4">Top Rated Products</h1>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">No top-rated products found.</div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var product in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <!-- Product Image -->
+                        <img src="@product.ImageFileName" class="card-img-top" alt="@product.ProductName">
+
+                        <div class="card-body">
+                            <!-- Product Name -->
+                            <h5 class="card-title">@product.ProductName</h5>
+                            
+                            <!-- Product Rating -->
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="text-warning">★</span>
+                                <span class="ms-1">@product.Rating.ToString("0.0")</span>
+                            </div>
+                            
+                            <!-- Product Price -->
+                            <p class="card-text">@product.Price.ToString("C")</p>
+                        </div>
+
+                        <div class="card-footer">
+                            <!-- View Details Link -->
+                            <a asp-action="Details" asp-route-id="@product.Id" 
+                               class="btn btn-primary">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

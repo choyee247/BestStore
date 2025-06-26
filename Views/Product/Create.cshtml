@@ -1,0 +1,132 @@
+﻿@model Example2.Models.ProductDto
+@{
+    ViewData["Title"] = "Create New Product";
+}
+
+<div class="row">
+    <div class="col-lg-8 mx-auto bg-light p-4 rounded shadow-sm border border-secondary-subtle">
+        <h2 class="text-center mb-4 fw-bold text-primary">🛒 Add New Product</h2>
+
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <!-- Product Name -->
+            <div class="mb-3 row">
+                <label class="col-sm-3 col-form-label fw-semibold">Product Name</label>
+                <div class="col-sm-9">
+                    <input asp-for="ProductName" class="form-control" required />
+                    <span asp-validation-for="ProductName" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Category -->
+            <div class="mb-3 row">
+                <label class="col-sm-3 col-form-label fw-semibold">Category</label>
+                <div class="col-sm-9">
+                    <select asp-for="CategoryId" asp-items="Model.Categories" class="form-select" id="categoryId" required>
+                        <option value="">-- Select Category --</option>
+                    </select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Brand -->
+            <div class="mb-3 row">
+                <label class="col-sm-3 col-form-label fw-semibold">Brand</label>
+                <div class="col-sm-9">
+                    <select asp-for="BrandId" asp-items="Model.Brands" class="form-select" id="brandId" required>
+                        <option value="">-- Select Brand --</option>
+                    </select>
+                    <span asp-validation-for="BrandId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Price -->
+            <div class="mb-3 row">
+                <label class="col-sm-3 col-form-label fw-semibold">Price</label>
+                <div class="col-sm-9">
+                    <input asp-for="Price" class="form-control" required />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3 row">
+                <label class="col-sm-3 col-form-label fw-semibold">Description</label>
+                <div class="col-sm-9">
+                    <textarea asp-for="Description" class="form-control" rows="3" required></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="mb-4 row">
+                <label class="col-sm-3 col-form-label fw-semibold">Image</label>
+                <div class="col-sm-9">
+                    <input type="file" asp-for="ImageFile" class="form-control" accept="image/*" required onchange="previewImage(this)" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+
+                    <!-- Preview and Size -->
+                    <div class="mt-3">
+                        <img id="imagePreview" src="#" class="img-thumbnail" style="display: none; max-width: 150px;" />
+                        <div id="fileSizeText" class="text-muted mt-2"></div>
+                        <div id="fileSizeError" class="text-danger" style="display:none;">Image size must be 30 KB or less.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit & Cancel Buttons -->
+            <div class="d-flex justify-content-between">
+                <a class="btn btn-outline-secondary px-4" asp-controller="Product" asp-action="Index">Cancel</a>
+                <button type="submit" class="btn btn-primary px-4">
+                    <i class="bi bi-check-circle me-1"></i> Submit
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(input) {
+            const file = input.files[0];
+            const preview = document.getElementById("imagePreview");
+            const sizeText = document.getElementById("fileSizeText");
+            const errorText = document.getElementById("fileSizeError");
+
+            if (file) {
+                const sizeKB = Math.round(file.size / 1024);
+                sizeText.textContent = `Selected image size: ${sizeKB} KB`;
+
+                if (file.size > 30720) {
+                    errorText.style.display = "block";
+                    preview.style.display = "none";
+                } else {
+                    errorText.style.display = "none";
+                    preview.src = URL.createObjectURL(file);
+                    preview.style.display = "block";
+                }
+            } else {
+                preview.style.display = "none";
+                sizeText.textContent = "";
+                errorText.style.display = "none";
+            }
+        }
+
+        document.getElementById("categoryId").addEventListener("change", function () {
+            var categoryId = this.value;
+            fetch(`/Category/GetBrandsByCategory?categoryId=${categoryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const brandSelect = document.getElementById("brandId");
+                    brandSelect.innerHTML = '<option value="">-- Select Brand --</option>';
+                    data.forEach(brand => {
+                        const option = document.createElement("option");
+                        option.value = brand.id;
+                        option.text = brand.name;
+                        brandSelect.appendChild(option);
+                    });
+                });
+        });
+    </script>
+}

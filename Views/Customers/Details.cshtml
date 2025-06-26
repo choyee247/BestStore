@@ -1,0 +1,19 @@
+﻿@model Example2.Models.Customer
+
+<div class="container mt-5">
+    <h3 class="text-info">👁️ Customer Details</h3>
+    <dl class="row">
+        <dt class="col-sm-3">Full Name</dt>
+        <dd class="col-sm-9">@Model.FullName</dd>
+
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">@Model.Email</dd>
+
+        <dt class="col-sm-3">Address</dt>
+        <dd class="col-sm-9">@Model.Address</dd>
+
+        <dt class="col-sm-3">Registered At</dt>
+        <dd class="col-sm-9">@Model.RegisteredAt.ToString("MMM dd, yyyy")</dd>
+    </dl>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

@@ -1,0 +1,147 @@
+﻿@* @model Example2.Models.Order
+
+<div class="container py-5" style="max-width: 900px;">
+    <div class="card shadow rounded-4 border-0">
+        <div class="card-body">
+            <h2 class="card-title mb-4 text-primary fw-bold">🧾 Order Confirmation</h2>
+
+            <div class="mb-4">
+                <p><strong>👤 Name:</strong> <span class="text-secondary">@Model.CustomerName</span></p>
+                <p><strong>📧 Email:</strong> <span class="text-secondary">@Model.Email</span></p>
+                <p><strong>📍 Address:</strong> <span class="text-secondary">@Model.Address</span></p>
+                <p><strong>📅 Date:</strong> <span class="text-secondary">@Model.OrderDate.ToString("yyyy-MM-dd HH:mm")</span></p>
+                <p><strong>🚚 Shipping Method:</strong> @Model.ShippingMethod</p>
+                <p><strong>💸 Shipping Cost:</strong> @Model.ShippingCost.ToString("C")</p>
+            </div>
+
+            <h4 class="mt-4 mb-3 text-secondary fw-semibold">🛒 Order Items</h4>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Product</th>
+                            <th class="text-center" style="width: 100px;">Quantity</th>
+                            <th class="text-end" style="width: 120px;">Price</th>
+                            <th class="text-end" style="width: 140px;">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderItems)
+                        {
+                            <tr>
+                                <td>@item.Product.ProductName</td>
+                                <td class="text-center">@item.Quantity</td>
+                                <td class="text-end">@item.Product.Price.ToString("C")</td>
+                                <td class="text-end">
+                                    @(item.Product != null ? (item.Quantity * item.Product.Price).ToString("C") : "N/A")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-end me-2 mt-3 mb-5">
+                <h5 class="fw-bold">Total: <span class="text-success">@Model.OrderItems.Sum(i => i.Quantity * i.Product.Price).ToString("C")</span></h5>
+            </div>
+            <div class="text-end mt-3">
+                <a asp-controller="Order" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-lg btn-warning px-4 rounded-pill me-2">
+                    ✏️ Edit Order
+                </a>
+                <a asp-controller="Payment" asp-action="Pay" asp-route-orderId="@Model.Id" class="btn btn-lg btn-success px-4 rounded-pill me-2">
+                    💳 Pay Now
+                </a>
+                <a asp-controller="Order" asp-action="Delete" asp-route-id="@Model.Id"
+                   onclick="return confirm('Are you sure you want to cancel this order?');"
+                   class="btn btn-lg btn-outline-danger px-4 rounded-pill">
+                    × Cancel Order
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+ *@
+ @model Example2.Models.Order
+
+<div class="container py-5" style="max-width: 950px;">
+    <div class="card border-0 shadow-lg rounded-4">
+        <div class="card-body px-5 py-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="text-primary fw-bold">🧾 Order Confirmation</h2>
+                <span class="badge bg-success fs-6 py-2 px-3 rounded-pill">Confirmed</span>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="bg-light rounded-3 p-3">
+                        <h5 class="text-secondary fw-semibold mb-3">👤 Customer Details</h5>
+                        <p><i class="bi bi-person-fill"></i> <strong>Name:</strong> @Model.CustomerName</p>
+                        <p><i class="bi bi-envelope-fill"></i> <strong>Email:</strong> @Model.Email</p>
+                        <p><i class="bi bi-geo-alt-fill"></i> <strong>Address:</strong> @Model.Address</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="bg-light rounded-3 p-3">
+                        <h5 class="text-secondary fw-semibold mb-3">🚚 Order Info</h5>
+                        <p><i class="bi bi-calendar-event"></i> <strong>Date:</strong> @Model.OrderDate.ToString("yyyy-MM-dd HH:mm")</p>
+                        <p><i class="bi bi-truck"></i> <strong>Shipping:</strong> @Model.ShippingMethod</p>
+                        <p><i class="bi bi-cash-stack"></i> <strong>Shipping Cost:</strong> @Model.ShippingCost.ToString("C")</p>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="mt-5 mb-3 text-secondary fw-semibold">🛒 Order Items</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle rounded-3 overflow-hidden">
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th>Product</th>
+                            <th style="width: 90px;">Qty</th>
+                            <th style="width: 120px;">Unit Price</th>
+                            <th style="width: 140px;">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderItems)
+                        {
+                            <tr>
+                                <td>@item.Product.ProductName</td>
+                                <td class="text-center">@item.Quantity</td>
+                                <td class="text-end">@item.Product.Price.ToString("C")</td>
+                                <td class="text-end">
+                                    @(item.Product != null ? (item.Quantity * item.Product.Price).ToString("C") : "N/A")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-end mt-4">
+                <h4 class="fw-bold">
+                    Total:
+                    <span class="text-success">
+                        @Model.OrderItems.Sum(i => i.Quantity * i.Product.Price).ToString("C")
+                    </span>
+                </h4>
+            </div>
+
+            <div class="d-flex justify-content-end mt-4 gap-3">
+                <a asp-controller="Order" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning btn-lg px-4 rounded-pill">
+                    ✏️ Edit
+                </a>
+                <a asp-controller="Payment" asp-action="Pay" asp-route-orderId="@Model.Id" class="btn btn-success btn-lg px-4 rounded-pill">
+                    💳 Pay Now
+                </a>
+                <a asp-controller="Order" asp-action="Delete" asp-route-id="@Model.Id"
+                   onclick="return confirm('Are you sure you want to cancel this order?');"
+                   class="btn btn-outline-danger btn-lg px-4 rounded-pill">
+                    × Cancel
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

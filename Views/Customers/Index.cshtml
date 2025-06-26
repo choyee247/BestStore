@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Example2.Models.Customer>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold text-primary">👥 Customers</h2>
+        <a asp-action="Create" class="btn btn-outline-primary shadow-sm">
+            <i class="bi bi-plus-circle"></i> Add New Customer
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body">
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info text-center">No customers found.</div>
+            }
+            else
+            {
+                <div class="table-responsive fs-5">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">👤 Full Name</th>
+                                <th scope="col">📧 Email</th>
+                                <th scope="col">📍 Address</th>
+                                <th scope="col">🕒 Registered At</th>
+                                <th scope="col">🛠️ Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in Model)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@c.FullName</td>
+                                    <td>
+                                        <span class="badge bg-primary">@c.Email</span>
+                                    </td>
+                                    <td class="fw-semibold">@c.Address</td>
+                                    <td>
+                                        <span class="text-muted">@c.RegisteredAt.ToString("MMM dd, yyyy")</span>
+                                    </td>
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@c.CustomerId" class="btn btn-info btn-sm me-1">Details</a>
+                                        <a asp-action="Edit" asp-route-id="@c.CustomerId" class="btn btn-warning btn-sm me-1">Edit</a>
+                                        <a asp-action="Delete" asp-route-id="@c.CustomerId" class="btn btn-danger btn-sm"
+                                           onclick="return confirm('Are you sure you want to delete this customer?');">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="mt-4">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-sm">
+        ↩Back
+    </a>
+</div>

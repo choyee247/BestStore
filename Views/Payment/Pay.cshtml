@@ -1,0 +1,57 @@
+﻿@model Example2.Models.PaymentViewModel
+
+<div class="container py-5" style="max-width: 700px;">
+    <div class="card shadow-lg rounded-4 border-0">
+        <div class="card-body">
+            <h2 class="card-title mb-4 text-primary fw-bold"><i class="bi bi-credit-card-2-front-fill"></i> Make a Payment</h2>
+
+            <form asp-action="Pay" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="OrderId" />
+
+                <div class="mb-3">
+                    <label asp-for="CardHolder" class="form-label fw-semibold">Card Holder Name</label>
+                    <input asp-for="CardHolder" class="form-control" placeholder="John Doe" />
+                    <span asp-validation-for="CardHolder" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="CardNumber" class="form-label fw-semibold">Card Number</label>
+                    <input asp-for="CardNumber" class="form-control" required pattern="\d{13,19}" placeholder="1234 5678 9012 3456" />
+                    <span asp-validation-for="CardNumber" class="text-danger small"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Expiry" class="form-label fw-semibold">Expiry Date</label>
+                        <input asp-for="Expiry" class="form-control" placeholder="MM/YY" />
+                        <span asp-validation-for="Expiry" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="CVV" class="form-label fw-semibold">CVV</label>
+                        <input asp-for="CVV" class="form-control" placeholder="123" />
+                        <span asp-validation-for="CVV" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="bg-light p-3 rounded-3 mb-4 text-end">
+                    <h5 class="mb-0">Total Amount: <span class="text-success">@Model.Amount.ToString("C")</span></h5>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-lg w-100">
+                    <i class="bi bi-lock-fill"></i> Submit Payment
+                </button>
+            </form>
+
+            <div class="mt-4 text-center">
+                <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left-circle"></i> Back
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

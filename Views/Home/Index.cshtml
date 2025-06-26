@@ -1,0 +1,332 @@
+﻿@* 
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!-- Hero Section -->
+<div class="position-relative overflow-hidden p-5 text-center rounded-4 shadow mb-5"
+     style="background: linear-gradient(rgba(94,44,165,0.7), rgba(12,5,51,0.7)), url('https://source.unsplash.com/1600x900/?store,products,night') center/cover no-repeat; min-height: 70vh; display: flex; align-items: center; justify-content: center;">
+
+    <div class="text-white py-5">
+        <h1 class="display-3 fw-bold mb-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Bringing <span style="color: #FFD700">Best Products</span> to Life</h1>
+        <p class="lead mb-5" style="font-size: 1.5rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">
+            Discover everything from seasonal deals to the latest and greatest products.
+        </p>
+        <div class="d-flex justify-content-center gap-4">
+            <a class="btn px-4 py-3 rounded-pill shadow-sm d-flex align-items-center"
+               style="background-color: #FFD700; color: #333; font-size: 1.3rem; min-width: 180px; justify-content: center"
+               asp-controller="Order" asp-action="Create">
+                🛍️ Shop Now
+            </a>
+            <button class="btn px-4 py-3 rounded-pill shadow-sm d-flex align-items-center gap-2"
+                    style="background-color: rgba(255,255,255,0.2); backdrop-filter: blur(5px); color: white; font-size: 1.3rem; min-width: 180px; justify-content: center; border: 1px solid rgba(255,255,255,0.3);"
+                    data-bs-toggle="modal" data-bs-target="#videoModal">
+                ▶️ Watch Video
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Video Modal -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 315px;">
+        <!-- Adjusted for Shorts aspect ratio -->
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0 ratio" style="--bs-aspect-ratio: 177.77%;">
+                <!-- 9:16 aspect ratio -->
+                <iframe id="storeVideo" src="https://www.youtube.com/embed/pLjr6_txvFo?autoplay=1&mute=1&enablejsapi=1"
+                        title="YouTube Shorts player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Stop video when modal is closed
+        var videoModal = document.getElementById('videoModal');
+        videoModal.addEventListener('hidden.bs.modal', function (event) {
+            var iframe = document.getElementById('storeVideo');
+            iframe.src = iframe.src; // Reset the iframe source to stop video
+        });
+    </script>
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Explore More</h2>
+        <a href="#" class="btn btn-link text-decoration-none" style="color: #8A2BE2; font-weight: 500;">Trending →</a>
+    </div>
+
+    <!-- Product cards grid would go here -->
+</div> *@
+@model DashboardViewModel  
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!-- Hero Section -->
+<div class="position-relative overflow-hidden p-5 text-center rounded-4 shadow mb-5"
+     style="background: linear-gradient(rgba(94,44,165,0.7), rgba(12,5,51,0.7)), url('https://source.unsplash.com/1600x900/?store,products,night') center/cover no-repeat; min-height: 10vh; display: flex; align-items: center; justify-content: center;">
+
+    <div class="text-white py-5">
+        <h1 class="display-5 fw-bold mb-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Bringing <span style="color: #FFD700">Best Products</span> to Life</h1>
+        <p class="lead mb-5" style="font-size: 1.5rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">
+            Discover everything from seasonal deals to the latest and greatest products.
+        </p>
+        <div class="d-flex justify-content-center gap-4">
+            <a class="btn px-4 py-3 rounded-pill shadow-sm d-flex align-items-center"
+               style="background-color: #FFD700; color: #333; font-size: 1.3rem; min-width: 180px; justify-content: center"
+               asp-controller="Order" asp-action="Create">
+                🛍️ Shop Now
+            </a>
+            <button class="btn px-4 py-3 rounded-pill shadow-sm d-flex align-items-center gap-2"
+                    style="background-color: rgba(255,255,255,0.2); backdrop-filter: blur(5px); color: white; font-size: 1.3rem; min-width: 180px; justify-content: center; border: 1px solid rgba(255,255,255,0.3);"
+                    data-bs-toggle="modal" data-bs-target="#videoModal">
+                ▶️ Watch Video
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Summary Dashboard -->
+<div class="container mb-5">
+    <div class="row g-4">
+        <!-- Product Summary -->
+        <div class="col-lg-6">
+            <div class="card rounded-4 shadow border-0 h-100">
+                <div class="card-header bg-transparent border-0 py-3">
+                    <h3 class="card-title mb-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-box-seam fs-3 text-purple"></i>
+                        Product Summary
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="p-4 rounded-4 bg-light-purple">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-white p-3 rounded-circle">
+                                        <i class="bi bi-grid-1x2 fs-2 text-purple"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-1 text-muted">Total Products</p>
+                                        <h2 class="mb-0 fw-bold">@Model.ProductSummary.TotalProducts</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-4 rounded-4 bg-light-warning">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-white p-3 rounded-circle">
+                                        <i class="bi bi-tags fs-2 text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-1 text-muted">Categories</p>
+                                        <h2 class="mb-0 fw-bold">@Model.ProductSummary.TotalCategories</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-4 rounded-4 bg-light-success">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-white p-3 rounded-circle">
+                                        <i class="bi bi-star fs-2 text-success"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-1 text-muted">Top Rated</p>
+                                        <h2 class="mb-0 fw-bold">@Model.ProductSummary.TopRated</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-4 rounded-4 bg-light-info">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-white p-3 rounded-circle">
+                                        <i class="bi bi-lightning fs-2 text-info"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-1 text-muted">New Arrivals</p>
+                                        <h2 class="mb-0 fw-bold">@Model.ProductSummary.NewArrivals</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0 py-3">
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-purple rounded-pill px-4 py-2">
+                        <i class="bi bi-box-arrow-right me-2"></i>Manage Products
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-6">
+            <div class="card rounded-4 shadow border-0 h-100">
+                <div class="card-header bg-transparent border-0 py-3">
+                    <h3 class="card-title mb-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-cart-check fs-3 text-primary"></i>
+                        Order Summary
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="p-4 rounded-4 bg-light-primary">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-white p-3 rounded-circle">
+                                        <i class="bi bi-cart fs-2 text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-1 text-muted">Total Orders</p>
+                                        <h2 class="mb-0 fw-bold">@Model.OrderSummary.TotalOrders</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-4 rounded-4 bg-light-success">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-white p-3 rounded-circle">
+                                        <i class="bi bi-check-circle fs-2 text-success"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-1 text-muted">Completed</p>
+                                        <h2 class="mb-0 fw-bold">@Model.OrderSummary.TotalOrders</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-4 rounded-4 bg-light-warning">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-white p-3 rounded-circle">
+                                        <i class="bi bi-clock fs-2 text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-1 text-muted">Pending</p>
+                                        <h2 class="mb-0 fw-bold">@Model.OrderSummary.Pending</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-4 rounded-4 bg-light-danger">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-white p-3 rounded-circle">
+                                        <i class="bi bi-x-circle fs-2 text-danger"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-1 text-muted">Cancelled</p>
+                                        <h2 class="mb-0 fw-bold">@Model.OrderSummary.Cancelled</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0 py-3">
+                    <a asp-controller="Order" asp-action="Index" class="btn btn-primary rounded-pill px-4 py-2">
+                        <i class="bi bi-list-check me-2"></i>View Orders
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Video Modal -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 315px;">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0 ratio" style="--bs-aspect-ratio: 177.77%;">
+                <iframe id="storeVideo" src="https://www.youtube.com/embed/pLjr6_txvFo?autoplay=1&mute=1&enablejsapi=1"
+                        title="YouTube Shorts player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Stop video when modal is closed
+        var videoModal = document.getElementById('videoModal');
+        videoModal.addEventListener('hidden.bs.modal', function (event) {
+            var iframe = document.getElementById('storeVideo');
+            iframe.src = iframe.src; // Reset the iframe source to stop video
+        });
+    </script>
+}
+
+<!-- Add custom styles for summary cards -->
+<style>
+    .bg-light-purple {
+        background-color: rgba(94, 44, 165, 0.1);
+    }
+
+    .bg-light-warning {
+        background-color: rgba(255, 215, 0, 0.1);
+    }
+
+    .bg-light-success {
+        background-color: rgba(40, 167, 69, 0.1);
+    }
+
+    .bg-light-info {
+        background-color: rgba(23, 162, 184, 0.1);
+    }
+
+    .bg-light-primary {
+        background-color: rgba(13, 110, 253, 0.1);
+    }
+
+    .bg-light-danger {
+        background-color: rgba(220, 53, 69, 0.1);
+    }
+
+    .text-purple {
+        color: #5e2ca5;
+    }
+
+    .btn-purple {
+        background-color: #5e2ca5;
+        color: white;
+        border: none;
+    }
+
+        .btn-purple:hover {
+            background-color: #4a2285;
+            color: white;
+        }
+
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        }
+</style>
+
+@* <div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Explore More</h2>
+        <a href="#" class="btn btn-link text-decoration-none" style="color: #8A2BE2; font-weight: 500;">Trending →</a>
+    </div>
+    <!-- Product cards grid would go here -->
+</div> *@

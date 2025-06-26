@@ -1,0 +1,66 @@
+﻿@model Example2.Models.ProductDetailsViewModel
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+<div class="container py-5" style="max-width: 900px;">
+    <div class="card shadow-sm rounded-4 border-0">
+        <div class="card-body">
+            <!-- Product Info -->
+            <h2 class="card-title text-primary mb-4 fw-bold">@Model.Product.ProductName</h2>
+
+            <div class="row g-3 mb-4">
+                <div class="col-12">
+                    <p class="mb-1"><strong>💲 Price:</strong> $@Model.Product.Price</p>
+                    <p class="mb-1"><strong>📃 Description:</strong> @Model.Product.Description</p>
+                    <p class="mb-1"><strong>📁 Category:</strong> @Model.Product.Category?.Name</p>
+                    <p class="mb-1"><strong>🏷️ Brand:</strong> @Model.Product.Brand?.Name</p>
+                </div>
+            </div>
+
+            <hr class="my-4" />
+
+            <!-- Reviews -->
+            <h4 class="text-primary fw-bold mb-3">⭐ Customer Reviews</h4>
+
+            @if (Model.Product.Reviews != null && Model.Product.Reviews.Any())
+            {
+                <div class="list-group mb-4">
+                    @foreach (var review in Model.Product.Reviews)
+                    {
+                        <div class="list-group-item list-group-item-action flex-column align-items-start shadow-sm rounded mb-2">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1 fw-semibold">@review.ReviewerName</h6>
+                                <small class="text-muted">@review.ReviewDate.ToShortDateString()</small>
+                            </div>
+                            <p class="mb-1">@review.Comment</p>
+                            <div><span class="text-warning"><i class="bi bi-star-fill"></i></span> Rating: <strong>@review.Rating</strong>/5</div>
+                        </div>
+                    }
+                </div>
+            }
+            else if (!ViewData.ContainsKey("ReviewSubmitted"))
+            {
+                <div class="alert alert-info">No reviews yet.</div>
+            }
+
+            <!-- Leave a Review Button -->
+            <div class="text-center">
+                <a asp-controller="Review" asp-action="Create" asp-route-productId="@Model.Product.ProductId" class="btn btn-outline-primary">
+                    <i class="bi bi-pencil-square"></i> Leave a Review
+                </a>
+            </div>
+          
+            <!-- Back Button -->
+            <div class="mt-4 text-center">
+                <a asp-controller="Product" asp-action="Index" class="btn btn-sm btn-secondary">
+                    ← Back to Products
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

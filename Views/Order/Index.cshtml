@@ -1,0 +1,167 @@
+﻿@* @model IEnumerable<Example2.Models.Order>
+
+@{
+    ViewData["Title"] = "📋 Order List";
+    var currentPage = ViewBag.CurrentPage as int? ?? 1;
+    var totalPages = ViewBag.TotalPages as int? ?? 1;
+    int orderNumber = (currentPage - 1) * 5 + 1;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary fw-bold">📋 Order List</h2>
+    <a asp-action="Create" class="btn btn-success shadow-sm rounded-pill px-3">
+        ➕ New Order
+    </a>
+</div>
+
+<div class="table-responsive shadow-lg rounded-4">
+    <table class="table table-hover table-bordered align-middle bg-white rounded-4">
+        <thead class="table-primary text-center align-middle">
+            <tr>
+                <th>#️⃣</th>
+                <th>👤 Customer</th>
+                <th>📧 Email</th>
+                <th>🗓️ Date</th>
+                <th>🛍️ Items</th>
+                <th>⚙️ Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td class="text-center">@orderNumber</td>
+                    <td>@order.CustomerName</td>
+                    <td>@order.Email</td>
+                    <td>@order.OrderDate.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>
+                        <ul class="mb-0 ps-3 small">
+                            @foreach (var item in order.OrderItems)
+                            {
+                                <li>🛒 @item.Product.ProductName / @item.Quantity</li>
+                            }
+                        </ul>
+                    </td>
+                    <td class="text-center">
+                        <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-info rounded-pill me-1">🔍 View</a>
+                        <a asp-action="Edit" asp-route-id="@order.Id" class="btn btn-sm btn-warning rounded-pill me-1">✏️ Edit</a>
+                        <a asp-action="Delete" asp-route-id="@order.Id" class="btn btn-sm btn-danger rounded-pill"
+                           onclick="return confirm('Are you sure you want to delete this order?');">🗑️ Delete</a>
+                    </td>
+                </tr>
+                orderNumber++;
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination -->
+<nav aria-label="Order pagination" class="mt-4">
+    <ul class="pagination justify-content-center">
+        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+            <a class="page-link" asp-action="Index" asp-route-page="@(currentPage - 1)" aria-label="Previous">
+                <span aria-hidden="true">⏪</span>
+            </a>
+        </li>
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            <li class="page-item @(i == currentPage ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+            </li>
+        }
+        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+            <a class="page-link" asp-action="Index" asp-route-page="@(currentPage + 1)" aria-label="Next">
+                <span aria-hidden="true">⏩</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<div class="text-center mt-4">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary btn-sm rounded-pill">
+        ⬅️ Back to Home
+    </a>
+</div>
+ *@
+@model IEnumerable<Example2.Models.Order>
+
+@{
+    ViewData["Title"] = "🧾 Order List";
+    var currentPage = ViewBag.CurrentPage as int? ?? 1;
+    var totalPages = ViewBag.TotalPages as int? ?? 1;
+    int orderNumber = (currentPage - 1) * 6 + 1;
+}
+
+<h2 class="text-center text-primary fw-bold mb-4">🧾 Order List</h2>
+
+<div class="d-flex justify-content-end mb-3">
+    <a asp-action="Create" class="btn btn-success shadow-sm rounded-pill px-4 py-2">
+        ➕ New Order
+    </a>
+</div>
+
+<div class="row g-4">
+    @foreach (var order in Model)
+    {
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-header bg-primary text-white rounded-top-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="fw-bold">#@orderNumber</span>
+                    </div>
+                    <small>@order.OrderDate.ToString("yyyy-MM-dd HH:mm")</small>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-dark fw-bold">👤 @order.CustomerName</h5>
+                    <p class="card-text mb-2">
+                        📧 <span class="text-muted small">@order.Email</span>
+                    </p>
+                    <div class="mb-2">
+                        <strong>🛍️ Items:</strong>
+                        <ul class="small ps-3 mb-0">
+                            @foreach (var item in order.OrderItems)
+                            {
+                                <li>🛒 <strong>@item.Product.ProductName</strong> × @item.Quantity</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer bg-light d-flex justify-content-between rounded-bottom-4">
+                    <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-outline-info rounded-pill">🔍 View</a>
+                    <a asp-action="Edit" asp-route-id="@order.Id" class="btn btn-sm btn-outline-warning rounded-pill">✏️ Edit</a>
+                    <a asp-action="Delete" asp-route-id="@order.Id" class="btn btn-sm btn-outline-danger rounded-pill"
+                       onclick="return confirm('Are you sure you want to delete this order?');">🗑️ Delete</a>
+                </div>
+            </div>
+        </div>
+        orderNumber++;
+    }
+</div>
+
+<!-- Pagination -->
+@if (totalPages > 1)
+{
+    <nav aria-label="Pagination" class="mt-5">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(currentPage - 1)" aria-label="Previous"><i class="bi bi-chevron-left"></i></a>
+            </li>
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == currentPage ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+                </li>
+            }
+            <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(currentPage + 1)" aria-label="Next"><i class="bi bi-chevron-right"></i></a>
+            </li>
+        </ul>
+    </nav>
+}
+
+<div class="text-center mt-4">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary btn-sm rounded-pill">
+        ⬅️ Back to Home
+    </a>
+</div>
+
